@@ -16,7 +16,13 @@ CORS(app)
 # Google Maps API key from environment variable
 API_KEY = os.getenv('GOOGLE_MAPS_API_KEY')
 if not API_KEY:
-    raise ValueError("GOOGLE_MAPS_API_KEY not found in environment variables. Please create a .env file with your API key.")
+    raise ValueError(
+        "GOOGLE_MAPS_API_KEY not found in environment variables. "
+        "Set this server-side environment variable (e.g. on your host) "
+        "or create a local .env file with GOOGLE_MAPS_API_KEY=your_key_here."
+    )
+
+# Shared Google Maps client, used for backend ETA / geocoding calls
 gmaps = googlemaps.Client(key=API_KEY)
 
 # Toronto Union Station coordinates
@@ -275,6 +281,18 @@ def random_destination():
     return jsonify({
         'error': f'Could not find a destination with all transport modes after {max_attempts} attempts'
     }), 500
+
+
+@app.route('/maps-api-key', methods=['GET'])
+def maps_api_key():
+    """
+    Lightweight endpoint to expose the Google Maps JS API key to the frontend.
+
+    The key itself is sourced **only** from the server-side environment variable
+    GOOGLE_MAPS_API_KEY, so deployments just need to set that env var and both
+    backend and frontend will work.
+    """
+    return jsonify({'googleMapsApiKey': API_KEY})
 
 
 @app.route('/', methods=['GET'])

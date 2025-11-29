@@ -649,17 +649,35 @@
         window.initMap = initMap;
     </script>
 
-    <!-- Load configuration (API key) -->
-    <script src="config.js"></script>
-
-    <!-- Load Google Maps API dynamically using config -->
+    <!-- Load Google Maps API dynamically using server-side env-backed endpoint -->
     <script>
-        (function() {
-            const script = document.createElement('script');
-            script.src = `https://maps.googleapis.com/maps/api/js?key=${CONFIG.GOOGLE_MAPS_API_KEY}&callback=initMap`;
-            script.async = true;
-            script.defer = true;
-            document.head.appendChild(script);
+        (async function() {
+            try {
+                // Ask the backend for the API key; backend reads GOOGLE_MAPS_API_KEY from env
+                const response = await fetch('/maps-api-key');
+                if (!response.ok) {
+                    throw new Error('Failed to fetch Maps API key');
+                }
+
+                const data = await response.json();
+                const apiKey = data.googleMapsApiKey;
+
+                if (!apiKey) {
+                    throw new Error('Maps API key is missing from backend response');
+                }
+
+                const script = document.createElement('script');
+                script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&callback=initMap`;
+                script.async = true;
+                script.defer = true;
+                document.head.appendChild(script);
+            } catch (err) {
+                console.error('Failed to load Google Maps API:', err);
+                const mapEl = document.getElementById('map');
+                if (mapEl) {
+                    mapEl.textContent = 'Failed to load map. Please check the server-side GOOGLE_MAPS_API_KEY configuration.';
+                }
+            }
         })();
     </script>
 </body>
