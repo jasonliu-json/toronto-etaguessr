@@ -91,7 +91,7 @@ def is_on_water(destination):
         # e.g., "Toronto, ON, Canada" vs "123 Main St, Toronto, ON, Canada"
         address_parts = [comp for comp in address_components
                         if any(t in comp.get('types', [])
-                              for t in ['street_number', 'route', 'premise', 'subpremise'])]
+                              for t in ['street_number', 'route'])]
 
         if not address_parts:
             # No street-level address components, likely water
