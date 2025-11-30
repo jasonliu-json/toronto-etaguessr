@@ -59,6 +59,86 @@ def generate_random_point_in_radius(center_lat, center_lng, radius_meters):
     return new_lat, new_lng
 
 
+def get_nearby_subway_stations(center_lat, center_lng, radius_meters=10000):
+    """
+    Get subway/metro stations within a given radius using Places API.
+    Returns list of station coordinates.
+    """
+    try:
+        # Use Places API to find transit stations
+        places_result = gmaps.places_nearby(
+            location=(center_lat, center_lng),
+            radius=radius_meters,
+            type='subway_station'
+        )
+
+        stations = []
+        if places_result.get('results'):
+            for place in places_result['results']:
+                location = place['geometry']['location']
+                stations.append({
+                    'lat': location['lat'],
+                    'lng': location['lng'],
+                    'name': place.get('name', 'Unknown Station')
+                })
+
+        return stations
+    except Exception as e:
+        print(f"Warning: Could not fetch subway stations: {e}")
+        return []
+
+
+def generate_biased_origin():
+    """
+    Generate origin with bias toward subway stations or Union Station proximity.
+    - 60% chance: Within 500m of a subway station
+    - 20% chance: Within 3km of Union Station
+    - 20% chance: Anywhere in 10km radius
+    """
+    rand = random.random()
+
+    if rand < 0.6:
+        # Try to get near subway station
+        try:
+            stations = get_nearby_subway_stations(
+                UNION_STATION['lat'],
+                UNION_STATION['lng'],
+                MAX_RADIUS_METERS
+            )
+
+            if stations:
+                # Pick random station and generate point within 500m
+                station = random.choice(stations)
+                origin_lat, origin_lng = generate_random_point_in_radius(
+                    station['lat'],
+                    station['lng'],
+                    500  # 500m radius around station
+                )
+                print(f"  → Generated origin near subway station: {station['name']}")
+                return origin_lat, origin_lng
+        except Exception as e:
+            print(f"  → Subway station selection failed, falling back to random: {e}")
+
+    if rand < 0.8:
+        # Within 3km of Union Station
+        origin_lat, origin_lng = generate_random_point_in_radius(
+            UNION_STATION['lat'],
+            UNION_STATION['lng'],
+            3000  # 3km radius
+        )
+        print(f"  → Generated origin near Union Station (< 3km)")
+        return origin_lat, origin_lng
+
+    # Anywhere in 10km radius
+    origin_lat, origin_lng = generate_random_point_in_radius(
+        UNION_STATION['lat'],
+        UNION_STATION['lng'],
+        MAX_RADIUS_METERS
+    )
+    print(f"  → Generated origin anywhere in 10km radius")
+    return origin_lat, origin_lng
+
+
 def is_on_water(destination):
     """
     Check if a destination point is on water (lake, ocean, etc.).
@@ -225,12 +305,8 @@ def random_destination():
 
     for attempt in range(max_attempts):
         try:
-            # Generate random origin
-            origin_lat, origin_lng = generate_random_point_in_radius(
-                UNION_STATION['lat'],
-                UNION_STATION['lng'],
-                MAX_RADIUS_METERS
-            )
+            # Generate biased origin (prefer subway stations or Union Station proximity)
+            origin_lat, origin_lng = generate_biased_origin()
 
             origin = {
                 'lat': origin_lat,
