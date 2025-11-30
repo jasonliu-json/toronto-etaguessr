@@ -40,6 +40,34 @@ CITIES = {
         'center_name': 'Downtown',
         'radius_km': 10,
         'radius_meters': 10000
+    },
+    'calgary': {
+        'name': 'Calgary',
+        'center': {'lat': 51.0447, 'lng': -114.0719},  # Downtown Calgary
+        'center_name': 'Downtown',
+        'radius_km': 10,
+        'radius_meters': 10000
+    },
+    'vancouver': {
+        'name': 'Vancouver',
+        'center': {'lat': 49.2827, 'lng': -123.1207},  # Downtown Vancouver
+        'center_name': 'Downtown',
+        'radius_km': 10,
+        'radius_meters': 10000
+    },
+    'new-york': {
+        'name': 'New York',
+        'center': {'lat': 40.7580, 'lng': -73.9855},  # Times Square
+        'center_name': 'Times Square',
+        'radius_km': 10,
+        'radius_meters': 10000
+    },
+    'boston': {
+        'name': 'Boston',
+        'center': {'lat': 42.3601, 'lng': -71.0589},  # Downtown Boston
+        'center_name': 'Downtown',
+        'radius_km': 10,
+        'radius_meters': 10000
     }
 }
 

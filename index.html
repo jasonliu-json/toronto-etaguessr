@@ -309,6 +309,10 @@
             <select id="city-select" onchange="onCityChange()">
                 <option value="toronto">Toronto</option>
                 <option value="san-francisco">San Francisco</option>
+                <option value="calgary">Calgary</option>
+                <option value="vancouver">Vancouver</option>
+                <option value="new-york">New York</option>
+                <option value="boston">Boston</option>
             </select>
         </div>
 
@@ -380,21 +384,60 @@
                 centerName: 'Downtown',
                 radiusKm: 10,
                 zoom: 12
+            },
+            'calgary': {
+                name: 'Calgary',
+                center: { lat: 51.0447, lng: -114.0719 },
+                centerName: 'Downtown',
+                radiusKm: 10,
+                zoom: 12
+            },
+            'vancouver': {
+                name: 'Vancouver',
+                center: { lat: 49.2827, lng: -123.1207 },
+                centerName: 'Downtown',
+                radiusKm: 10,
+                zoom: 12
+            },
+            'new-york': {
+                name: 'New York',
+                center: { lat: 40.7580, lng: -73.9855 },
+                centerName: 'Times Square',
+                radiusKm: 10,
+                zoom: 12
+            },
+            'boston': {
+                name: 'Boston',
+                center: { lat: 42.3601, lng: -71.0589 },
+                centerName: 'Downtown',
+                radiusKm: 10,
+                zoom: 12
             }
         };
 
         // URL path to city mapping
         const pathToCityMap = {
+            // Heroku paths
             '/san-francisco': 'san-francisco',
             '/sf': 'san-francisco',
             '/toronto': 'toronto',
+            '/calgary': 'calgary',
+            '/vancouver': 'vancouver',
+            '/new-york': 'new-york',
+            '/nyc': 'new-york',
+            '/boston': 'boston',
             '/': 'toronto',
             // GitHub Pages paths (with repo name)
             '/etaguessr/': 'toronto',
             '/etaguessr': 'toronto',
             '/etaguessr/toronto': 'toronto',
             '/etaguessr/san-francisco': 'san-francisco',
-            '/etaguessr/sf': 'san-francisco'
+            '/etaguessr/sf': 'san-francisco',
+            '/etaguessr/calgary': 'calgary',
+            '/etaguessr/vancouver': 'vancouver',
+            '/etaguessr/new-york': 'new-york',
+            '/etaguessr/nyc': 'new-york',
+            '/etaguessr/boston': 'boston'
         };
 
         // Get base path (for GitHub Pages compatibility)
