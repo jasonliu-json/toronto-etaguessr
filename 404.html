@@ -6,8 +6,15 @@
     <script>
         // GitHub Pages SPA redirect solution
         // This captures the path and redirects to index.html, preserving the route
-        sessionStorage.setItem('redirect', location.pathname);
-        location.replace(location.origin + location.pathname.split('/').slice(0, 2).join('/') + '/');
+        const originalPath = location.pathname;
+        const redirectTarget = location.origin + location.pathname.split('/').slice(0, 2).join('/') + '/';
+
+        console.log('[404 Redirect] Original path:', originalPath);
+        console.log('[404 Redirect] Redirecting to:', redirectTarget);
+        console.log('[404 Redirect] Storing path in sessionStorage');
+
+        sessionStorage.setItem('redirect', originalPath);
+        location.replace(redirectTarget);
     </script>
 </head>
 <body>

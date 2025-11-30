@@ -412,6 +412,7 @@
             // Check for GitHub Pages 404 redirect
             const redirect = sessionStorage.getItem('redirect');
             if (redirect) {
+                console.log('[City Init] Detected 404 redirect, restoring path:', redirect);
                 sessionStorage.removeItem('redirect');
                 // Restore the path without reloading
                 window.history.replaceState(null, '', redirect);
@@ -420,12 +421,18 @@
             const path = window.location.pathname;
             const cityFromPath = pathToCityMap[path];
 
+            console.log('[City Init] Current path:', path);
+            console.log('[City Init] Mapped to city:', cityFromPath);
+
             if (cityFromPath && cityConfigs[cityFromPath]) {
                 selectedCity = cityFromPath;
+                console.log('[City Init] Selected city:', selectedCity, cityConfigs[cityFromPath].name);
                 const citySelect = document.getElementById('city-select');
                 if (citySelect) {
                     citySelect.value = selectedCity;
                 }
+            } else {
+                console.log('[City Init] No city mapping found for path, using default:', selectedCity);
             }
         }
 
